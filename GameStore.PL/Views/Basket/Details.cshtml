@@ -1,0 +1,92 @@
+﻿@using GameStore.DomainModels.Enums
+@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model GameStore.PL.DTOs.OrderDTO
+
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = SharedLocalizer["Details"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <h1>@Localizer["Order"] #@Model.Id</h1>
+
+    @if (@Model.Status == OrderStatus.Processed)
+    {
+        <h3 class="text-primary">@Localizer["Processed"]</h3>
+    }
+    @if (@Model.Status == OrderStatus.Completed)
+    {
+        <h3 class="text-success">@Localizer["Completed"])</h3>
+    }
+    @if (@Model.Status == OrderStatus.Canceled)
+    {
+        <h3 class="text-danger">@Localizer["Canceled"]</h3>
+    }
+</div>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CustomerId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CustomerId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OrderDate)
+        </dd>
+    </dl>
+
+    <hr />
+    <form method="post" asp-controller="order" asp-action="MadeOrderDetailsQuantityChangings">
+        <input asp-for="@Model.Id" value="@Model.Id" hidden />
+        <input asp-for="@Model.Status" value="@Model.Status" hidden />
+
+        <div>
+            @for (var i = 0; i < Model.OrderDetails.Count; i++)
+            {
+                <input asp-for="OrderDetails[i].OrderId" hidden />
+                <input asp-for="OrderDetails[i].Product.Id" hidden />
+                <input asp-for="OrderDetails[i].Id" hidden />
+                <input asp-for="OrderDetails[i].Price" hidden />
+
+                <div class="border-1 rounded-1 p-1 mb-1">
+                    <h4>@(FieldLocalizer.GetLocalizedField(x => x.Name, Model.OrderDetails[i].Product))</h4>
+                    <p class="text-muted">
+                        @Localizer["Price"]:
+                        @Html.DisplayFor(modelItem => Model.OrderDetails[i].Price)
+                        <br>
+                        <div class="row">
+                            <span class="col-1">Quantity:</span>
+                            <div class="col-2">
+                                @if (Model.Status == OrderStatus.Completed)
+                                {
+                                    <input disabled asp-for="OrderDetails[i].Quantity" min="0" max="@Model.OrderDetails[i].Product.UnitsInStock" class="form-control" />
+                                }
+                                else
+                                {
+                                    <input asp-for="OrderDetails[i].Quantity" min="0" max="@Model.OrderDetails[i].Product.UnitsInStock" class="form-control" />
+                                }
+                            </div>
+                        </div>
+                    </p>
+                </div>
+            }
+        </div>
+        <div>
+            @if (Model.Status != OrderStatus.Completed)
+            {
+                <input type="submit" value="@Localizer["MakeOrder"]" class="btn btn-outline-success" />
+            }
+            <a asp-action="Index" asp-controller="Games" class="btn btn-outline-dark">@SharedLocalizer["BackToList"]</a>
+        </div>
+    </form>
+</div>

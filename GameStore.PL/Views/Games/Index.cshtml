@@ -1,0 +1,248 @@
+﻿@model GameStore.PL.ViewContexts.GamesViewsContext
+
+@using GameStore.PL.App_Code
+@using GameStore.PL.DTOs
+@using GameStore.PL.Configurations
+@using GameStore.DomainModels.Enums
+@using GameStore.PL.Util
+@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+
+@inject IOptions<ApplicationSettings> ApplicationSettings
+
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var publishingDateOptions = ApplicationSettings.Value.DateOfPublishingFilterSettings.OldestPublishingDateFilterOptions.OrderBy(x => x.Value);
+    var itemsPerPageOptions = ApplicationSettings.Value.GamesPerPageSettings.ItemsPerPageOptions.OrderBy(x => x.Value);
+}
+
+<div class="row container">
+    <div class="col-8 container">
+        <div>
+            <h1>@Localizer["Catalog"]</h1>
+            <p>
+                <a asp-action="GetCreationView" class="btn btn-outline-success">@Localizer["CreateNewGame"]</a>
+                <hr />
+            </p>
+        </div>
+
+        <div class="games-list">
+            @foreach (var game in Model.Games)
+            {
+                <div class="gameContainer">
+                    <h3 class="text-primary">
+                        @(FieldLocalizer.GetLocalizedField<GoodsDTO>(g => g.Name, game))
+                    </h3>
+                    <div>
+                        <p class="text-secondary">
+                            @(FieldLocalizer.GetLocalizedField<GoodsDTO>(g => g.Description, game))
+                        </p>
+                    </div>
+                    <div>
+                        @if (string.IsNullOrEmpty(game.Distributor))
+                        {
+                            <span class="text-muted">@Localizer["Uknown"]</span>
+                        }
+                        else
+                        {
+                            <a asp-controller="publisher" asp-action="Details" asp-route-name="@game.Distributor" class="text-decoration-none">@game.Distributor</a>
+                        }
+                        <p>
+                            @Localizer["Genres"]:
+                            @if (game.Genres.Any())
+                            {
+                                @ListHelper.JoinListIntoOneString(Html, game.Genres, genre => genre.Name, ", ")
+                            }
+                            else
+                            {
+                                <span class="text-muted">@Localizer["Other"]</span>
+                            }
+                            <br>
+                            @Localizer["Platforms"]: @ListHelper.JoinListIntoOneString(Html, game.PlatformTypes, type => type.Type, ", ")
+                        </p>
+                        <p>
+                            <span>$@game.Price</span> <br>
+                            @Localizer["KeysLeft"]: @game.UnitsInStock <br>
+                            @if (@game.Discontinued == true)
+                            {
+                                <span class="text-muted">@Localizer["Discontinued"]</span>
+                            }
+                        </p>
+                    </div>
+
+                    <div>
+                        <a asp-action="GetEditingView" asp-route-key="@game.Key" class="btn btn-outline-warning">@SharedLocalizer["Edit"]</a>
+                        <a asp-controller="game" asp-action="DetailsByKey" asp-route-key="@game.Key" class="btn btn-outline-dark">@SharedLocalizer["Details"]</a>
+                        <a asp-action="GetDeletingView" asp-route-key="@game.Key" class="btn btn-outline-danger">@SharedLocalizer["Delete"]</a>
+                    </div>
+                    <hr />
+                </div>
+            }
+
+            @if (Model.Filters.ItemsPerPage != 0)
+            {
+                <pagination></pagination>
+            }
+
+        </div>
+    </div>
+
+    <div class="col container filterForm">
+        <form asp-action="Index" name="filterForm" onsubmit="setupCurrentPageValue()" method="get">
+            <div>
+                <h4>@Localizer["SortOrder"]</h4>
+                <div class="row">
+                    <select name="SortBy" class="form-select">
+                        @foreach (GamesSortType sort in Enum.GetValues(typeof(GamesSortType)))
+                        {
+                            @if (Model.Filters.SortBy == sort)
+                            {
+                                <option selected value="@sort">@Localizer[sort.ToString()]</option>
+                            }
+                            else
+                            {
+                                <option value="@sort">@Localizer[sort.ToString()]</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="mt-3">
+                    <h4>@Localizer["PriceRange"]</h4>
+                    <div class="row ">
+                        @Localizer["Min"]:
+                        <input type="number" min="0" class="form-control" name="MinPrice" id="MinPrice" value="@Model.Filters.MinPrice" />
+
+                        @Localizer["Max"]:
+                        <input type="number" min="0" class="form-control" name="MaxPrice" id="MaxPrice" value="@Model.Filters.MaxPrice" />
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <h4>@Localizer["Publishers"]</h4>
+
+                    <div class="form-check overflow-auto" style="height:200px">
+                        @foreach (var publisherFilter in Model.PublishersFilterOptions)
+                        {
+                            <div class=col>
+                                @if (Model.Filters.Distributors.Any(x => x == publisherFilter.Id))
+                                {
+                                    <input type="checkbox" id="@publisherFilter.CompanyName" class="form-check-input" name="Distributors" checked="checked" value="@publisherFilter.Id" />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" id="@publisherFilter.CompanyName" class="form-check-input" name="Distributors" value="@publisherFilter.Id" />
+                                }
+                                <label class="form-check-label" for="Publishers">@publisherFilter.CompanyName</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <h4>@Localizer["PublishedFor"]:</h4>
+
+                    <div>
+                        @foreach (var date in publishingDateOptions)
+                        {
+                            <div class="row form-check">
+                                @if (Model.Filters.CountOfDaysBeforePublishingDate == date.Value)
+                                {
+                                    <input class="p-0 form-check-input" name="CountOfDaysBeforePublishingDate" type="radio" id="@date.Key" value="@date.Value" checked="checked" />
+                                }
+                                else
+                                {
+                                    <input class="p-0 form-check-input" name="CountOfDaysBeforePublishingDate" type="radio" id="@date.Key" value="@date.Value" />
+                                }
+                                <label class="mx-0 form-check-label" for="@date.Key">@Localizer[date.Key.ToString()]</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <h4>@Localizer["Genres"]</h4>
+
+                    <div class="row justify-content-center row-cols-1 overflow-auto" style="height:200px">
+                        @foreach (var genreFilter in Model.GenresFilterOptions)
+                        {
+                            <div class="col form-check">
+                                @if (Model.Filters.Genres.Any(x => x == genreFilter.Id))
+                                {
+                                    <input class="col-1 form-check-input"
+                                   type="checkbox"
+                                   id="@genreFilter.Name"
+                                   name="Genres"
+                                   value="@genreFilter.Id"
+                                   checked="checked" />
+                                }
+                                else
+                                {
+                                    <input class="col-1 form-check-input" type="checkbox" id="@genreFilter.Name" name="Genres" value="@genreFilter.Id" />
+                                }
+                                <label class="col-5 form-check-label" for="Genres">@(FieldLocalizer.GetLocalizedField(x => x.Name, genreFilter))</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <h4>@Localizer["Platforms"]</h4>
+
+                    <div class="overflow-auto" style="height:200px">
+                        @foreach (var platformFilter in Model.PlatformsFilterOptions)
+                        {
+                            <div class=col form-check>
+                                @if (Model.Filters.PlatformTypes.Any(x => x == platformFilter.Id))
+                                {
+                                    <input type="checkbox" class="form-check-input" id="@platformFilter.Type" name="PlatformTypes" checked="checked" value="@platformFilter.Id" />
+                                }
+                                else
+                                {
+                                    <input type="checkbox" class="form-check-input" id="@platformFilter.Type" name="PlatformTypes" value="@platformFilter.Id" />
+                                }
+                                <label class="form-check-label" for="PlatformTypes">@(FieldLocalizer.GetLocalizedField(x => x.Type, platformFilter))</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div>
+                    <h4>@Localizer["ItemsPerPage"]</h4>
+                    <div class="row mt-3">
+                        <select class="form-select" name="ItemsPerPage">
+                            @foreach (var itemsPerPageOption in itemsPerPageOptions)
+                            {
+                                @if (Model.Filters.ItemsPerPage == itemsPerPageOption.Value)
+                                {
+                                    <option selected value="@itemsPerPageOption.Value">@Localizer[@itemsPerPageOption.Key]</option>
+                                }
+                                else
+                                {
+                                    <option value="@itemsPerPageOption.Value">@Localizer[@itemsPerPageOption.Key]</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <h4>@Localizer["SearchByName"]</h4>
+                    <input class="form-control" type="text" name="Name" id="Name" value="@Model.Filters.Name" />
+                </div>
+
+                <input hidden name="CurrentPage" value="@Model.Filters.CurrentPage" />
+
+                <div class="row mt-3">
+                    <input class="btn btn-outline-secondary col-3 mx-3" type="reset" value="@SharedLocalizer["Clear"]" />
+                    <input class="btn btn-outline-success col-3" type="submit" value="@SharedLocalizer["Apply"]" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+﻿@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model GameStore.PL.DTOs.PlatformTypeDTO
+
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = SharedLocalizer["Delete"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@SharedLocalizer["Delete"]</h1>
+
+<h3>@SharedLocalizer["Confirm"]</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+        <dd class = "col-sm-10">
+            @FieldLocalizer.GetLocalizedField(g => g.Type, Model)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="@SharedLocalizer["Delete"]" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-outline-dark">@SharedLocalizer["BackToList"]</a>
+    </form>
+</div>

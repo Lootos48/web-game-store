@@ -1,0 +1,86 @@
+﻿@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model GameStore.PL.ViewContexts.GamesGenreDetailsViewContext
+
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = SharedLocalizer["Details"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <h2>
+        @(FieldLocalizer.GetLocalizedField(g => g.Name, Model.Genre))
+    </h2>
+    <hr />
+    @if(Model.Genre.Parent != null)
+    {
+        <h3 class="text-muted">
+            @Localizer["ParentGenre"]: @(FieldLocalizer.GetLocalizedField(g => g.Name, Model.Genre.Parent))
+        </h3>
+    }
+</div>
+
+<div>
+    <h3>
+        @Localizer["GamesInGenre"]
+    </h3>
+
+    @if(Model.GamesInGenre.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GamesInGenre.First().Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GamesInGenre.First().Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GamesInGenre.First().Price)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GamesInGenre.First().UnitsInStock)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GamesInGenre.First().Discontinued)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.GamesInGenre)
+                {
+                    <tr>
+                        <td>
+                            @(FieldLocalizer.GetLocalizedField(x => x.Name, item))
+                        </td>
+                        <td>
+                            @(FieldLocalizer.GetLocalizedField(x => x.Description, item))
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UnitsInStock)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Discontinued)
+                        </td>
+                        <td>
+                            <a asp-controller="game" asp-action="DetailsByKey" asp-route-key="@item.Key" class="btn btn-outline-dark">@SharedLocalizer["Details"]</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<div>
+    <br />
+    <a asp-action="Index" class="btn btn-outline-dark">@SharedLocalizer["BackToList"]</a>
+</div>

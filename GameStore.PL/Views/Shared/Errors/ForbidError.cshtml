@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@model string
+
+@{
+    ViewData["Title"] = "ForbidError";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Localizer["h1"]</h1>
+<hr />
+
+<h3>
+    @Model
+</h3>
+

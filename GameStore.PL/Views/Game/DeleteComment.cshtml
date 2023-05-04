@@ -1,0 +1,27 @@
+﻿@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model GameStore.PL.ViewContexts.CommentDeletingViewContext
+
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h4>@SharedLocalizer["Confirm"]</h4>
+    </div>
+    <div class="modal-body">
+        <dl>
+            <dt>Author:</dt>
+            <dd>@Html.DisplayFor(model => model.CommentToDelete.Name)</dd>
+ 
+            <dt>Comment text:</dt>
+            <dd>@Html.DisplayFor(model => model.CommentToDelete.Body)</dd>
+        </dl>
+    </div>
+    <div class="modal-footer">
+        <form asp-action="DeleteComment" asp-route-key="@Model.GameKey" asp-route-commentId="@Model.CommentToDelete.Id">
+            <input type="submit" class="btn btn-outline-danger" value="@SharedLocalizer["Yes"]" />
+        </form>
+
+        <button class="close btn btn-outline-dark" data-bs-dismiss="modal" area-hidden="true">@SharedLocalizer["No"]</button>
+    </div>
+</div>

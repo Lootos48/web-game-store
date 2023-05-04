@@ -1,0 +1,67 @@
+﻿@using GameStore.DomainModels.Enums
+@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model IEnumerable<GameStore.PL.DTOs.UserDTO>
+
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = Localizer["AdminPage"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <h1>@Localizer["AdminPage"]</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Username)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Role)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>
+                        @user.Username
+                    </td>
+                    <td>
+                        @user.Email
+                    </td>
+                    <td>
+                        @if (user.Username != User.Identity.Name)
+                        {
+                            <form method="post" asp-page-handler="EditRole" asp-route-userId="@user.Id" asp-route-oldRole="@user.Role">
+                                <select class="form-control"
+                                asp-for="@user.Role"
+                                name="role"
+                                asp-items="Html.GetEnumSelectList<UserRoles>()"
+                                onchange="this.form.submit();">
+                                </select>
+                            </form>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="GetEditingView" asp-route-username="@user.Username" class="btn btn-outline-warning">@SharedLocalizer["Edit"]</a> |
+                        <a asp-action="Details" asp-route-username="@user.Username" class="btn btn-outline-dark">@SharedLocalizer["Details"]</a> |
+                        @if (user.Username != User.Identity.Name)
+                        {
+                            <a asp-action="GetDeletingView" asp-route-username="@user.Username" class="btn btn-outline-danger">@SharedLocalizer["Delete"]</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

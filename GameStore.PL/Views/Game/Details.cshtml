@@ -1,0 +1,77 @@
+﻿@model GameStore.PL.DTOs.GoodsDTO
+@using GameStore.PL.App_Code
+@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = SharedLocalizer["Details"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@SharedLocalizer["Details"]</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @(FieldLocalizer.GetLocalizedField(x => x.Name, Model))
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @(FieldLocalizer.GetLocalizedField(x => x.Description, Model))
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UnitsInStock)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UnitsInStock)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Discontinued)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Discontinued)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Distributor)
+        </dt>
+        <dd class = "col-sm-10">
+            <a asp-controller="publisher" asp-action="Details" asp-route-name="@Model.Distributor" class="text-decoration-none">
+                @Html.DisplayFor(model => model.Distributor)
+            </a>
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Genres)
+        </dt>
+        <dd class = "col-sm-10">
+            @ListHelper.JoinListIntoOneString(Html, Model.Genres, genre => genre.Name, ", ")
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PlatformTypes)
+        </dt>
+        <dd class="col-sm-10">
+            @ListHelper.JoinListIntoOneString(Html, Model.PlatformTypes, platform => platform.Type, ", ")
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="GetComments" asp-route-key="@Model.Key" class="m-1 btn btn-outline-dark">@Localizer["Comments"]</a>
+    <a asp-action="Download" asp-route-key="@Model.Key" class="m-1 btn btn-outline-dark" target="_blank">@Localizer["Download"]</a>
+    <a asp-action="Buy" asp-route-key="@Model.Key" class="m-1 btn btn-outline-success">@Localizer["Buy"]</a>
+    <a asp-controller="games" asp-action="GetEditingView" asp-route-key="@Model.Key" class="m-1 btn btn-outline-warning">@SharedLocalizer["Edit"]</a>
+    <a asp-controller="games" asp-action="Index" class="m-1 btn btn-outline-dark">@SharedLocalizer["BackToList"]</a>
+</div>

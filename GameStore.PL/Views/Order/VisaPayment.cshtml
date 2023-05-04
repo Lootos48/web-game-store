@@ -1,0 +1,41 @@
+﻿@model Guid
+
+@using GameStore.BLL.PaymentMethods;
+
+@{
+    ViewData["Title"] = "Visa payment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <form asp-action="Pay" asp-route-id="@Model" asp-route-paymentMethod="@PaymentType.Visa">
+        <table>
+            <tr>
+                <td>
+                    Card holder name:
+                </td>
+                <td>
+                    <input type="text"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Card number:
+                </td>
+                <td>
+                    <input type="number"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Date of expire:
+                </td>
+                <td>
+                    <input type="month"/>/<input type="number"/>
+                </td>
+            </tr>
+            <input asp-route-id="@Model" hidden/>
+            <input type="submit"/>
+        </table>
+    </form>
+</div>

@@ -1,0 +1,81 @@
+﻿@using GameStore.DomainModels.Enums
+@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model GameStore.PL.ViewContexts.OrdersFiltrationByDatesViewContext
+
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Localizer["History"]</h1>
+
+<h2>@Localizer["SelectDate"]:</h2>
+<form asp-action="Index" method="get">
+    <div class="row">
+        <div class="col">
+            @Localizer["Begin"]
+            <input asp-for="MinDate" placeholder="Start date"/>
+        </div>
+    
+        <div class="col">
+            @Localizer["End"]
+            <input asp-for="MaxDate" placeholder="End date"/>
+        </div>
+
+        <div class="col">
+            <input type="submit" value="@SharedLocalizer["Apply"]" cla ss="btn btn-primary"/>
+        </div>
+    </div>
+</form>
+
+<table class="table">
+    @if (Model.Orders.Any())
+   {
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(modelItem => modelItem.Orders.First().CustomerId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(modelItem => modelItem.Orders.First().OrderDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(modelItem => modelItem.Orders.First().Status)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.Orders)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.CustomerId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.OrderDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.Status)
+                    </td>
+                    <td>
+                        @if (order.Status != OrderStatus.Completed)
+                        {
+                            <a asp-action="GetEditingView" asp-route-id="@order.Id" class="btn btn-outline-warning">@SharedLocalizer["Edit"]</a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-outline-secondary" disabled>@SharedLocalizer["Edit"]</button>
+                        }
+                        <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-outline-dark">@SharedLocalizer["Details"]</a>
+                        <a asp-action="GetDeletingView" asp-route-id="@order.Id" class="btn btn-outline-danger">@SharedLocalizer["Delete"]</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    }
+</table>

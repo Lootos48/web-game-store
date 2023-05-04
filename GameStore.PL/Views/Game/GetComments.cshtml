@@ -1,0 +1,154 @@
+﻿@model GameStore.PL.ViewContexts.GameCommentsViewContext
+
+@using GameStore.DomainModels.Models;
+@using GameStore.DomainModels.Enums
+@using GameStore.PL.App_Code
+@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = Localizer["Comments"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="modDialog" class="modal fade" >
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+
+<h1>@Localizer["Comments"]</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <h3>@Localizer["Write"]</h3>
+        <form asp-action="CreateComment" class="entityForm" asp-route-key="@Model.GameKey">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <input asp-for="CommentToCreate.Name" value="@User.Identity.Name" hidden />
+                <input asp-for="CommentToCreate.AuthorId" value="@ClaimsHelper.GetUserId(User.Claims)" hidden />
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="CommentToCreate.Name" class="control-label"></label>
+                    <input asp-for="CommentToCreate.Name" class="form-control" />
+                    <span asp-validation-for="CommentToCreate.Name" class="text-danger"></span>
+                </div>
+            }
+
+            <div class="form-group">
+                <label asp-for="CommentToCreate.Body" class="control-label"></label>
+                <textarea asp-for="CommentToCreate.Body" rows="5" cols="80" class="form-control"></textarea>
+                <span asp-validation-for="CommentToCreate.Body" class="text-danger"></span>
+            </div>
+            <input asp-for="CommentToCreate.Type" hidden />
+            <input asp-for="CommentToCreate.ParentId" hidden />
+            <div class="form-group">
+                <input type="submit" value="@SharedLocalizer["Create"]" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mt-4">
+    <h3>@Localizer["Commentaries"]</h3>
+
+    <div>
+        @foreach (var comment in Model.Comments)
+        {
+            <div class="border border-1 rounded-3 p-3 mb-2 col-5">
+                <a name="@comment.Id"></a>
+
+                @if (comment.Author is null)
+                {
+                    <span class="text-muted">@comment.Name</span>
+                }
+                else
+                {
+                    <span class="text-muted">@comment.Author.Username</span>
+                }
+
+                <p class="wrappingText">
+                    @switch (comment.Type)
+                    {
+                        case CommentType.Standalone:
+                            break;
+                        case CommentType.Reply:
+                            <a class="text-decoration-none" href="#@comment.ParentId">@comment.Parent.Name</a>
+                            <span>,</span>
+                            break;
+                        case CommentType.Quote:
+                            <a class="text-decoration-none" href="#@comment.ParentId">@comment.Parent.Name </a>
+                            <quote>@comment.Parent.Body</quote>
+                            <span>,</span>
+                            break;
+                        default:
+                            break;
+                    }
+
+                    @comment.Body
+                </p>
+
+                @if (!@comment.IsDeleted)
+               {
+                <a asp-action="CommentReply"
+                   asp-route-key="@Model.GameKey"
+                   asp-route-commentId="@comment.Id"
+                   class="text-decoration-none border border-1 rounded  px-2 p-1 me-3">
+                    Reply
+                </a>
+
+                <a asp-action="CommentQuote"
+                   asp-route-key="@Model.GameKey"
+                   asp-route-commentId="@comment.Id"
+                   class="text-decoration-none  rounded p-1 px-2 border border-1 me-3">
+                   @Localizer["Quote"]
+                </a>
+
+                <a asp-action="GetEditingCommentView"
+                   asp-route-key="@Model.GameKey"
+                   asp-route-commentId="@comment.Id"
+                   class="text-decoration-none  rounded p-1 px-2 border border-1 me-3">
+                    @SharedLocalizer["Edit"]
+                </a>
+
+                <a asp-action="GetDeletingCommentPartialView"
+                   asp-route-key="@Model.GameKey"
+                   asp-route-commentId="@comment.Id"
+                    class="commentItem text-decoration-none rounded p-1 px-2 border border-1 me-3">
+                    @SharedLocalizer["Delete"]
+                </a>
+
+                <a asp-action="GetBanView"
+                   asp-controller="User"
+                   asp-route-username="@comment.Name"
+                   class="text-decoration-none rounded p-1 px-2 border border-1 me-2">
+                    @Localizer["Ban"]
+               </a>
+               }
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+ 
+        $(function () {
+            $.ajaxSetup({ cache: false });
+           $(".commentItem").click(function (e) {
+ 
+                e.preventDefault();
+                $.get(this.href, function (data) {
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                });
+            });
+        })
+    </script>
+}

@@ -1,0 +1,17 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@model GameStore.PL.DTOs.GoodsDTO
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Download"];
+}
+
+<body onload="download('@Model.Key')">
+    <div>
+        <h1>@Localizer["h1"]</h1>
+        <h3>@Localizer["h3"] <a asp-action="DownloadFile" asp-route-key="@Model.Key">link</a></h3>
+    </div>
+</body>
+
+

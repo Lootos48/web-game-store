@@ -1,0 +1,72 @@
+﻿@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model GameStore.PL.ViewContexts.PlatformTypeEditingViewContext
+
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = SharedLocalizer["Edit"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+<h1>@SharedLocalizer["Edit"]</h1>
+
+<hr />
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button onclick="setupChosedLocalization(null)" class="nav-link active" id="nav-en-tab" data-bs-toggle="tab" data-bs-target="#nav-en-US" type="button" role="tab" aria-controls="nav-en" aria-selected="true">@SharedLocalizer["English"]</button>
+        <button onclick="setupChosedLocalization('@Model.AvailableLocalizations["ru-RU"]')" class="nav-link" id="nav-ru-tab" data-bs-toggle="tab" data-bs-target="#nav-ru-RU" type="button" role="tab" aria-controls="nav-ru" aria-selected="false">@SharedLocalizer["Russian"]</button>
+        <button onclick="setupChosedLocalization('@Model.AvailableLocalizations["uk-UA"]')" class="nav-link" id="nav-uk-tab" data-bs-toggle="tab" data-bs-target="#nav-uk-UA" type="button" role="tab" aria-controls="nav-uk" aria-selected="false">@SharedLocalizer["Ukranian"]</button>
+    </div>
+</nav>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" class="entityForm">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-en-US" role="tabpanel" aria-labelledby="nav-en-US-tab">
+                    <div class="form-group">
+                        <label asp-for="PlatformType.Type" class="control-label"></label>
+                        <input asp-for="PlatformType.Type" class="form-control" />
+                        <span asp-validation-for="PlatformType.Type" class="text-danger"></span>
+                    </div>
+                </div>
+                @for (var i = 0; i < Model.PlatformType.Localizations.Count; i++)
+                {
+                    <div class="tab-pane fade" id="nav-@Model.PlatformType.Localizations[i].Localization.CultureCode" role="tabpanel" aria-labelledby="nav-@Model.PlatformType.Localizations[i].Localization.CultureCode-tab">
+                        <div class="form-group">
+                            <label asp-for="@Model.PlatformType.Localizations[i].Type" class="control-label"></label>
+                            <input asp-for="@Model.PlatformType.Localizations[i].Type" class="form-control" />
+                            <span asp-validation-for="@Model.PlatformType.Localizations[i].Type" class="text-danger"></span>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <input asp-for="PlatformType.Id" hidden>
+            @for (var i = 0; i < Model.PlatformType.Localizations.Count; i++)
+            {
+                <input asp-for="@Model.PlatformType.Localizations[i].Id" hidden>
+                <input asp-for="@Model.PlatformType.Localizations[i].PlatformTypeId" hidden>
+                <input asp-for="@Model.PlatformType.Localizations[i].LocalizationId" hidden>
+            }
+
+            <input id="ChosedLocalization" hidden asp-for="@Model.PlatformType.ChosedLocalization" />
+
+            <div class="form-group">
+                <input type="submit" value="@SharedLocalizer["Save"]" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-outline-dark">@SharedLocalizer["BackToList"]</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

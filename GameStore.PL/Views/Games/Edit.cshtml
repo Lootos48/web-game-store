@@ -1,0 +1,128 @@
+﻿@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model GameStore.PL.ViewContexts.GameEditingViewContext
+
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = SharedLocalizer["Edit"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@SharedLocalizer["Edit"]</h1>
+
+<hr />
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button onclick="setupChosedLocalization(null)" class="nav-link active" id="nav-en-tab" data-bs-toggle="tab" data-bs-target="#nav-en-US" type="button" role="tab" aria-controls="nav-en" aria-selected="true">@SharedLocalizer["English"]</button>
+        <button onclick="setupChosedLocalization('@Model.AvailableLocalizations["ru-RU"]')" class="nav-link" id="nav-ru-tab" data-bs-toggle="tab" data-bs-target="#nav-ru-RU" type="button" role="tab" aria-controls="nav-ru" aria-selected="false">@SharedLocalizer["Russian"]</button>
+        <button onclick="setupChosedLocalization('@Model.AvailableLocalizations["uk-UA"]')" class="nav-link" id="nav-uk-tab" data-bs-toggle="tab" data-bs-target="#nav-uk-UA" type="button" role="tab" aria-controls="nav-uk" aria-selected="false">@SharedLocalizer["Ukranian"]</button>
+    </div>
+</nav>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" class="entityForm">
+            <input asp-for="DistributorUserId" hidden />
+            <input asp-for="GameEditDTO.Id" hidden />
+            <input asp-for="GameEditDTO.DateOfAdding" hidden />
+            <input id="ChosedLocalization" asp-for="@Model.GameEditDTO.ChosedLocalization" hidden  />
+
+            @for (var i = 0; i < Model.GameEditDTO.Localizations.Count; i++)
+            {
+                <input asp-for="@Model.GameEditDTO.Localizations[i].Id" hidden>
+                <input asp-for="@Model.GameEditDTO.Localizations[i].LocalizationId" hidden>
+            }
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group divForm">
+                <label asp-for="GameEditDTO.Key" class="control-label"></label>
+                <input asp-for="GameEditDTO.Key" class="form-control" />
+                <span asp-validation-for="GameEditDTO.Key" class="text-danger"></span>
+            </div>
+
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-en-US" role="tabpanel" aria-labelledby="nav-en-US-tab">
+                    <div class="form-group">
+                        <label asp-for="GameEditDTO.Name" class="control-label"></label>
+                        <input asp-for="GameEditDTO.Name" class="form-control" />
+                        <span asp-validation-for="GameEditDTO.Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="GameEditDTO.Description" class="control-label"></label>
+                        <input asp-for="GameEditDTO.Description" class="form-control" />
+                        <span asp-validation-for="GameEditDTO.Description" class="text-danger"></span>
+                    </div>
+                </div>
+                @for (var i = 0; i < Model.GameEditDTO.Localizations.Count; i++)
+                {
+                    <div class="tab-pane fade" id="nav-@Model.GameEditDTO.Localizations[i].Localization.CultureCode" role="tabpanel" aria-labelledby="nav-@Model.GameEditDTO.Localizations[i].Localization.CultureCode-tab">
+                        <div class="form-group">
+                            <label asp-for="@Model.GameEditDTO.Localizations[i].Name" class="control-label"></label>
+                            <input asp-for="@Model.GameEditDTO.Localizations[i].Name" class="form-control" />
+                            <span asp-validation-for="@Model.GameEditDTO.Localizations[i].Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="@Model.GameEditDTO.Localizations[i].Description" class="control-label"></label>
+                            <input asp-for="@Model.GameEditDTO.Localizations[i].Description" class="form-control" />
+                            <span asp-validation-for="@Model.GameEditDTO.Localizations[i].Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GameEditDTO.Price" class="control-label"></label>
+                <input asp-for="GameEditDTO.Price" class="form-control" />
+                <span asp-validation-for="GameEditDTO.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GameEditDTO.UnitsInStock" class="control-label"></label>
+                <input asp-for="GameEditDTO.UnitsInStock" class="form-control" />
+                <span asp-validation-for="GameEditDTO.UnitsInStock" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="GameEditDTO.Discontinued" /> @Html.DisplayNameFor(model => model.GameEditDTO.Discontinued)
+                </label>
+            </div>
+            
+            
+            <div class="form-group">
+                @Html.LabelFor(model => model.GameEditDTO.DateOfPublishing):
+                @Html.EditorFor(model => model.GameEditDTO.DateOfPublishing,
+                    new { @class = "form-control"})
+            </div>
+
+            <div class="form-group">
+                @Html.DropDownListFor(model => model.GameEditDTO.DistributorId, 
+                    Model.GetPublishersAsSelectItem(), 
+                    new { @class = "form-control", multiple="false", @size=3})
+            </div>
+
+            <div class="form-group">
+                @Html.ListBoxFor(model => model.GameEditDTO.Genres, 
+                    Model.GetGenresAsSelectItem(), 
+                    new { @class = "form-control", multiple="true", @size=3})
+            </div>
+            
+            <div class="form-group">
+                @Html.ListBoxFor(model => model.GameEditDTO.PlatformTypes, 
+                    Model.GetPlatformsAsSelectItem(), 
+                    new { @class = "form-control", multiple="true", @size=3})
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="@SharedLocalizer["Save"]" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <br />
+    <a asp-action="Index" class="btn btn-outline-dark">@SharedLocalizer["BackToList"]</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

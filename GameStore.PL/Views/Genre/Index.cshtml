@@ -1,0 +1,53 @@
+﻿@using GameStore.PL.DTOs
+@using GameStore.PL.DTOs.LocalizationsDTO
+@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@model IEnumerable<GameStore.PL.DTOs.GenreDTO>
+
+@{
+    ViewData["Title"] = Localizer["Genres"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Localizer["Genres"]</h1>
+
+<p>
+    <a asp-action="GetCreationView" class="btn btn-outline-success">@SharedLocalizer["Create"]</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Parent)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+            <tr>
+            <td>
+                @(FieldLocalizer.GetLocalizedField<GenreDTO>(x => x.Name, item))
+            </td>
+            <td>
+                @if (item.Parent != null)
+                {
+                        @(FieldLocalizer.GetLocalizedField<GenreDTO>(x => x.Name, item.Parent))
+                }
+            </td>
+            <td>
+                    <a asp-action="GetEditingView" asp-route-genre="@item.Name" class="btn btn-outline-warning">@SharedLocalizer["Edit"]</a> |
+                    <a asp-action="Details" asp-route-genre="@item.Name" class="btn btn-outline-dark">@SharedLocalizer["Details"]</a> |
+                    <a asp-action="GetDeletingView" asp-route-genre="@item.Name" class="btn btn-outline-danger">@SharedLocalizer["Delete"]</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

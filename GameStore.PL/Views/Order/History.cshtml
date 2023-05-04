@@ -1,0 +1,63 @@
+﻿@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model GameStore.PL.ViewContexts.OrdersFiltrationByDatesViewContext
+
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = Localizer["History"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Localizer["History"]</h1>
+
+
+<h2>@Localizer["SelectDate"]:</h2>
+<form asp-action="GetOrdersHistory" method="get">
+    <div class="row">
+        <div class="col">
+            @Localizer["Begin"]
+            <input asp-for="MinDate" placeholder="Start date"/>
+        </div>
+    
+        <div class="col">
+            @Localizer["End"]
+            <input asp-for="MaxDate" placeholder="End date"/>
+        </div>
+
+        <div class="col">
+            <input type="submit" value="@SharedLocalizer["Apply"]" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+
+<h2>@Localizer["Orders"]</h2>
+<table class="table">
+    @if (Model.Orders.Any())
+    {
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(x => x.Orders.First().CustomerId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(x => x.Orders.First().OrderDate)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Orders)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CustomerId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderDate)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    }
+</table>

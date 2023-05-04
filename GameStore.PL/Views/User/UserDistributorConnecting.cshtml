@@ -1,0 +1,51 @@
+﻿@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model GameStore.PL.ViewContexts.UserDistributorConnectingViewContext
+
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = Localizer["Title"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <div>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.User.Id)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.User.Id)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.User.Username)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.User.Username)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.User.Email)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.User.Email)
+            </dd>
+        </dl>
+    </div>
+
+    <h4>@Localizer["Action"]</h4>
+
+    <form method="post" asp-action="ConnectUserToDistributor" class="col-md-4">
+        <input asp-for="User.Id" hidden />
+
+        <div class="form-group">
+            <label class="control-label">@Localizer["Publisher"]</label>
+            @Html.DropDownListFor(model => model.DistributorId,
+            Model.GetDistributorsAsSelectList(),
+            new { @class = "form-control", multiple="false", @size=3})
+        </div>
+
+        <input type="submit" value="@SharedLocalizer["Connect"]" class="btn btn-outline-success" />
+    </form>
+</div>

@@ -1,0 +1,140 @@
+﻿@using GameStore.DomainModels.Enums
+@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model GameStore.PL.ViewContexts.OrdersEditingViewContext
+
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = SharedLocalizer["Edit"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@SharedLocalizer["Edit"]</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input asp-for="OrderToEdit.Id" hidden />
+            <input asp-for="OrderToEdit.CustomerId" hidden />
+            <input asp-for="OrderToEdit.OldStatus" hidden />
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.OrderDate" class="control-label"></label>
+                <input asp-for="OrderToEdit.OrderDate" class="form-control" />
+                <span asp-validation-for="OrderToEdit.OrderDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.Status" class="control-label"></label>
+                <select 
+                    id="statusSelectList"
+                    class="form-control"
+                    asp-for="OrderToEdit.Status"
+                    asp-items="Html.GetEnumSelectList<OrderStatus>()"
+                    Value
+                    onchange="showDatePicker(this.value)">
+                </select>
+            </div>
+
+            <div id="expDateEditBlock" hidden class="form-group">
+                <label asp-for="OrderToEdit.ExpirationDateUtc" class="control-label"></label>
+                <input id="expDatePicker" disabled asp-for="OrderToEdit.ExpirationDateUtc" class="form-control" />
+                <span asp-validation-for="OrderToEdit.ExpirationDateUtc" class="text-danger"></span>
+            </div>
+
+            <div id="shippedDateEditBlock" hidden class="form-group">
+                <label asp-for="OrderToEdit.ShippedDate" class="control-label"></label>
+                <input id="shippedDatePicker" disabled asp-for="OrderToEdit.ShippedDate" class="form-control" />
+                <span asp-validation-for="OrderToEdit.ShippedDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.Freight" class="control-label"></label>
+                <input asp-for="OrderToEdit.Freight" class="form-control" />
+                <span asp-validation-for="OrderToEdit.Freight" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.ShipName" class="control-label"></label>
+                <input asp-for="OrderToEdit.ShipName" class="form-control" />
+                <span asp-validation-for="OrderToEdit.ShipName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.ShipAddress" class="control-label"></label>
+                <input asp-for="OrderToEdit.ShipAddress" class="form-control" />
+                <span asp-validation-for="OrderToEdit.ShipAddress" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.ShipCity" class="control-label"></label>
+                <input asp-for="OrderToEdit.ShipCity" class="form-control" />
+                <span asp-validation-for="OrderToEdit.ShipCity" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.ShipRegion" class="control-label"></label>
+                <input asp-for="OrderToEdit.ShipRegion" class="form-control" />
+                <span asp-validation-for="OrderToEdit.ShipRegion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.ShipPostalCode" class="control-label"></label>
+                <input asp-for="OrderToEdit.ShipPostalCode" class="form-control" />
+                <span asp-validation-for="OrderToEdit.ShipPostalCode" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.ShipCountry" class="control-label"></label>
+                <input asp-for="OrderToEdit.ShipCountry" class="form-control" />
+                <span asp-validation-for="OrderToEdit.ShipCountry" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.ShipVia" class="control-label"></label>
+                @Html.DropDownListFor(model => model.OrderToEdit.ShipVia,
+                Model.GetShippersAsSelectItem(),
+                new { @class = "form-control", multiple="false", @size=3})
+            </div>
+
+            <h3>@SharedLocalizer["Details"]:</h3>
+            <hr />
+            <div>
+                @for (var i = 0; i < Model.OrderToEdit.OrderDetails.Count; i++)
+                {
+                    <input asp-for="OrderToEdit.OrderDetails[i].OrderId" hidden />
+                    <input asp-for="OrderToEdit.OrderDetails[i].Product.Id" hidden />
+                    <input asp-for="OrderToEdit.OrderDetails[i].Id" hidden />
+                    <input asp-for="OrderToEdit.OrderDetails[i].Price" hidden />
+
+                    <div class="border-1 rounded-1 p-1 mb-1">
+                        <h4>@Model.OrderToEdit.OrderDetails[i].Product.Name</h4>
+                        <p class="text-muted">
+                            @Localizer["Price"]:
+                            @Localizer["Price"]: @Html.DisplayFor(modelItem => Model.OrderToEdit.OrderDetails[i].Price)
+                            <br>
+                            <div class="row">
+                                <span class="col-2">@Localizer["Quantity"]:</span>
+                                <div class="col-4">
+                                    <input asp-for="OrderToEdit.OrderDetails[i].Quantity" min="1" class="form-control" />
+                                </div>
+                            </div>
+                        </p>
+                    </div>
+                }
+            </div>
+            <div>
+                <input type="submit" value="@SharedLocalizer["Save"]" class="btn btn-outline-success" />
+                <a asp-action="Index" asp-controller="Games" class="btn btn-outline-dark">@SharedLocalizer["BackToList"]</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

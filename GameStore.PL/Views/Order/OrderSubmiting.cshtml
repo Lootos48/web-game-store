@@ -1,0 +1,142 @@
+﻿@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model GameStore.PL.DTOs.OrderDTO
+
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = SharedLocalizer["Details"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Localizer["Order"] #@Model.Id</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CustomerId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CustomerId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OrderDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ShipName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ShipName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ShipCountry)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ShipCountry)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ShipRegion)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ShipRegion)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ShipAddress)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ShipAddress)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Freight)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Freight)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ShipPostalCode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ShipPostalCode)
+        </dd>
+        @if (Model.Shipper != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Shipper.CompanyName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Shipper.CompanyName)
+            </dd>
+        }
+    </dl>
+    <h3>@Localizer["Buy"]:</h3>
+    <div>
+        @foreach (var order in Model.OrderDetails)
+        {
+            <div class="border-1 rounded-1 p-1 mb-1">
+                <h4>@(FieldLocalizer.GetLocalizedField(x => x.Name, order.Product))</h4>
+                <p class="text-muted">
+                    @Localizer["Quantity"]: @order.Quantity
+                    <br>@Localizer["Price"]: @order.Price
+                </p>
+            </div>
+            <hr />
+        }
+    </div>
+    <div>
+        <table class="table table-bordered">
+            <tr>
+                <td>
+                    <img height="50px" width="50px" src="~/bank_logo.png" />
+                </td>
+                <td>
+                    @Localizer["Bank"]
+                </td>
+                <td>
+                    @Localizer["BankDetails"]
+                </td>
+                <td>
+                    <a asp-action="GetBankInvoice" asp-route-id="@Model.Id">@Localizer["Pay"]</a>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <img height="50px" width="50px" src="~/ibox_logo.png" />
+                </td>
+                <td>
+                    @Localizer["IBox"]
+                </td>
+                <td>
+                    @Localizer["IBoxDetails"]
+                </td>
+                <td>
+                    <a asp-action="GetIBoxPaymentView" asp-route-id="@Model.Id">@Localizer["Pay"]</a>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <img height="50px" width="70px" src="~/visa_logo.png" />
+                </td>
+                <td>
+                    @Localizer["Visa"]
+                </td>
+                <td>
+                    @Localizer["VisaDetails"]
+                </td>
+                <td>
+                    <a asp-action="GetVisaPaymentView" asp-route-id="@Model.Id">@Localizer["Pay"]</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <hr />
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-outline-dark">@SharedLocalizer["BackToList"]</a>
+</div>

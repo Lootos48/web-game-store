@@ -1,0 +1,35 @@
+﻿@using GameStore.PL.Configurations;
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options;
+
+@inject IViewLocalizer Localizer
+@inject IOptions<ApplicationSettings> ApplicationSettings
+
+@model GameStore.PL.DTOs.UserDTO
+
+@{
+    ViewData["Title"] = Localizer["Ban"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var banOptions = ApplicationSettings.Value.BanSettings.DurationInHours.OrderBy(x => x.Value);
+}
+
+<h1>
+    @Localizer["h1"]
+</h1>
+
+<div>
+    <h4>@Localizer["Action"]</h4>
+
+    <form asp-action="Ban">
+        <select name="hours">
+            @foreach (var duration in banOptions)
+            {
+                <option value="@duration.Value">@duration.Key</option>
+	        }
+        </select>
+
+        <input type="hidden" name="userId" asp-for="@Model.Id" />
+        <input type="submit" value="@Localizer["Ban"]" />
+    </form>
+</div>
+

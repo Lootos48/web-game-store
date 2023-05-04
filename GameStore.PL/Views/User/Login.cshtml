@@ -1,0 +1,38 @@
+﻿@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model GameStore.PL.DTOs.LoginUserRequestDTO
+
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = SharedLocalizer["Login"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@SharedLocalizer["Login"]</h1>
+
+<div class=" justify-content-center">
+    <form asp-action="login" class="form-control w-25 p-3">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div>
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+        <div class="my-3">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" class="form-control" />
+        </div>
+
+        <div>
+            <input type="submit" value="@SharedLocalizer["Login"]" class="btn btn-outline-success" />
+            <a asp-action="GetRegistrationView" class="btn btn-outline-dark">@SharedLocalizer["Register"]</a>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

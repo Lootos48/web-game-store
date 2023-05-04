@@ -1,0 +1,43 @@
+﻿@using GameStore.BLL.PaymentMethods
+@model GameStore.PL.ViewContexts.OrderIBoxPaymentViewContext
+
+@{
+    ViewData["Title"] = "IBox payment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <table>
+        <tr>
+            <td>
+                IBox account number:
+            </td>
+            <td>
+                @Model.Order.CustomerId
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                Invoice number:
+            </td>
+            <td>
+                @Model.Order.Id
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                Summ:
+            </td>
+            <td>
+                @Model.TotalPrice
+            </td>
+        </tr>
+
+        <form asp-action="Pay" asp-route-id="@Model.Order.Id" asp-route-paymentMethod="@PaymentType.IBox">
+            <input name="id" id="id" value="@Model.Order.Id" hidden/>
+            <input type="submit" value="Pay" class="btn btn-outline-success" />
+        </form>
+    </table>
+</div>

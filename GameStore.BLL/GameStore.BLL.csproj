@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+    <PackageReference Include="PdfSharp" Version="1.50.5147" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GameStore.DAL.Abstractions\GameStore.DAL.Abstractions.csproj" />
+    <ProjectReference Include="..\GameStore.DomainModels\GameStore.DomainModels.csproj" />
+  </ItemGroup>
+
+	<PropertyGroup Label="FineCodeCoverage">
+		<Enabled>
+			True
+		</Enabled>
+		<Exclude>
+			[ThirdParty.*]*
+			[FourthParty]*
+		</Exclude>
+		<Include>
+			[*]*
+		</Include>
+		<ExcludeByFile>
+			**/Migrations/*
+			**/Hacks/*.cs
+		</ExcludeByFile>
+		<ExcludeByAttribute>
+			ExcludeFromCodeCoverage
+		</ExcludeByAttribute>
+		<IncludeTestAssembly>
+			True
+		</IncludeTestAssembly>
+	</PropertyGroup>
+</Project>

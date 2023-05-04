@@ -1,0 +1,56 @@
+﻿@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model IEnumerable<GameStore.PL.DTOs.DistributorDTO>
+
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = Localizer["Publishers"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@Localizer["Publishers"]</h1>
+
+<p>
+    <a asp-action="GetCreationView" class="btn btn-outline-success">@SharedLocalizer["Create"]</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HomePage)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+                <td>
+                    @if (item.HomePage != "NULL")
+                    {
+                        @Html.DisplayFor(modelItem => item.HomePage)
+                    }
+                </td>
+                <td>
+                    <a asp-action="GetEditingView" asp-route-name="@item.CompanyName" class="btn btn-outline-warning">@SharedLocalizer["Edit"]</a> |
+                    <a asp-action="Details" asp-route-name="@item.CompanyName" class="btn btn-outline-dark">@SharedLocalizer["Details"]</a> |
+                    <a asp-action="GetDeletingView" asp-route-name="@item.CompanyName" class="btn btn-outline-danger">@SharedLocalizer["Delete"]</a>
+                </td>
+        </tr>
+}
+    </tbody>
+</table>

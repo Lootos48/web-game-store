@@ -1,0 +1,85 @@
+﻿@using GameStore.DomainModels.Enums
+@using GameStore.PL.Util.Localizers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model GameStore.PL.ViewContexts.OrdersEditingViewContext
+
+@inject IViewLocalizer Localizer
+@inject IHtmlLocalizer<SharedLocalizer> SharedLocalizer
+
+@{
+    ViewData["Title"] = SharedLocalizer["Edit"];
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@SharedLocalizer["Edit"]</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="MakeOrder">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input asp-for="OrderToEdit.Id" hidden />
+            <input asp-for="OrderToEdit.CustomerId" hidden />
+            <input asp-for="OrderToEdit.Status" hidden />
+            <input asp-for="OrderToEdit.OrderDate" hidden />
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.Freight" class="control-label"></label>
+                <input asp-for="OrderToEdit.Freight" class="form-control" />
+                <span asp-validation-for="OrderToEdit.Freight" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.ShipName" class="control-label"></label>
+                <label asp-for="OrderToEdit.ShipAddress" class="control-label"></label>
+                <input asp-for="OrderToEdit.ShipAddress" class="form-control" />
+                <span asp-validation-for="OrderToEdit.ShipAddress" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.ShipCity" class="control-label"></label>
+                <input asp-for="OrderToEdit.ShipCity" class="form-control" />
+                <span asp-validation-for="OrderToEdit.ShipCity" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.ShipRegion" class="control-label"></label>
+                <input asp-for="OrderToEdit.ShipRegion" class="form-control" />
+                <span asp-validation-for="OrderToEdit.ShipRegion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.ShipPostalCode" class="control-label"></label>
+                <input asp-for="OrderToEdit.ShipPostalCode" class="form-control" />
+                <span asp-validation-for="OrderToEdit.ShipPostalCode" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.ShipCountry" class="control-label"></label>
+                <input asp-for="OrderToEdit.ShipCountry" class="form-control" />
+                <span asp-validation-for="OrderToEdit.ShipCountry" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderToEdit.ShipVia" class="control-label"></label>
+                @Html.DropDownListFor(model => model.OrderToEdit.ShipVia,
+                Model.GetShippersAsSelectItem(),
+                new { @class = "form-control", multiple = "false", @size = 3 })
+            </div>
+
+            <div class="form-group row">
+                <input type="submit" value="@Localizer["Choose"]" class="btn btn-primary col-3 me-3" />
+                <a asp-action="Index" class="btn btn-outline-dark col-3">@SharedLocalizer["BackToList"]</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

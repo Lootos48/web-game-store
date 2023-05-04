@@ -1,0 +1,14 @@
+﻿@model Exception
+
+@{
+    ViewData["Title"] = "Error";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.GetType()</h2>
+
+<h3>@Model.Message</h3>
+
+<h4>@Model.InnerException</h4>
+
+<p>@Model.StackTrace</p>
