@@ -39,17 +39,17 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
-                <td>
-                    @if (item.HomePage != "NULL")
-                    {
-                        @Html.DisplayFor(modelItem => item.HomePage)
-                    }
-                </td>
-                <td>
-                    <a asp-action="GetEditingView" asp-route-name="@item.CompanyName" class="btn btn-outline-warning">@SharedLocalizer["Edit"]</a> |
-                    <a asp-action="Details" asp-route-name="@item.CompanyName" class="btn btn-outline-dark">@SharedLocalizer["Details"]</a> |
-                    <a asp-action="GetDeletingView" asp-route-name="@item.CompanyName" class="btn btn-outline-danger">@SharedLocalizer["Delete"]</a>
-                </td>
+            <td>
+                @if (item.HomePage != "NULL")
+                {
+                    @Html.DisplayFor(modelItem => item.HomePage)
+                }
+            </td>
+            <td class="flex row gap-2">
+                <a asp-action="GetEditingView" asp-route-name="@item.CompanyName" class="btn btn-outline-warning col">@SharedLocalizer["Edit"]</a> 
+                <a asp-action="Details" asp-route-name="@item.CompanyName" class="btn btn-outline-dark col">@SharedLocalizer["Details"]</a> 
+                <a asp-action="GetDeletingView" asp-route-name="@item.CompanyName" class="btn btn-outline-danger col">@SharedLocalizer["Delete"]</a>
+            </td>
         </tr>
 }
     </tbody>

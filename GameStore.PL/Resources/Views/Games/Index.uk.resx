@@ -133,19 +133,19 @@
     <value>Каталог</value>
   </data>
   <data name="CreateNewGame" xml:space="preserve">
-    <value>Створити нову гру</value>
+    <value>Додати новий товар</value>
   </data>
   <data name="Discontinued" xml:space="preserve">
     <value>Припинено</value>
   </data>
   <data name="Genres" xml:space="preserve">
-    <value>Жанри</value>
+    <value>Категорії</value>
   </data>
   <data name="ItemsPerPage" xml:space="preserve">
     <value>Позицій на сторінці</value>
   </data>
   <data name="KeysLeft" xml:space="preserve">
-    <value>Ключів залишилось</value>
+    <value>Залишилось на складі</value>
   </data>
   <data name="Max" xml:space="preserve">
     <value>Макс.</value>

@@ -25,10 +25,13 @@
     <div class="col-8 container">
         <div>
             <h1>@Localizer["Catalog"]</h1>
-            <p>
-                <a asp-action="GetCreationView" class="btn btn-outline-success">@Localizer["CreateNewGame"]</a>
-                <hr />
-            </p>
+            @if (Context.User.IsInRole(UserRoles.Publishers.ToString()) || Context.User.IsInRole(UserRoles.Manager.ToString()) || Context.User.IsInRole(UserRoles.Administrator.ToString()))
+            {
+                <p>
+                    <a asp-action="GetCreationView" class="btn btn-outline-success">@Localizer["CreateNewGame"]</a>
+                </p>
+            }
+            <hr />
         </div>
 
         <div class="games-list">
@@ -76,9 +79,13 @@
                     </div>
 
                     <div>
-                        <a asp-action="GetEditingView" asp-route-key="@game.Key" class="btn btn-outline-warning">@SharedLocalizer["Edit"]</a>
                         <a asp-controller="game" asp-action="DetailsByKey" asp-route-key="@game.Key" class="btn btn-outline-dark">@SharedLocalizer["Details"]</a>
-                        <a asp-action="GetDeletingView" asp-route-key="@game.Key" class="btn btn-outline-danger">@SharedLocalizer["Delete"]</a>
+                        
+                        @if (Context.User.IsInRole(UserRoles.Publishers.ToString()) || Context.User.IsInRole(UserRoles.Manager.ToString()) || Context.User.IsInRole(UserRoles.Administrator.ToString()))
+                        {
+                            <a asp-action="GetEditingView" asp-route-key="@game.Key" class="btn btn-outline-warning">@SharedLocalizer["Edit"]</a>
+                            <a asp-action="GetDeletingView" asp-route-key="@game.Key" class="btn btn-outline-danger">@SharedLocalizer["Delete"]</a>
+                        }
                     </div>
                     <hr />
                 </div>

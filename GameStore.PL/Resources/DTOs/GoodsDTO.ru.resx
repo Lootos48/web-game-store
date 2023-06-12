@@ -130,10 +130,10 @@
     <value>Снято с производства</value>
   </data>
   <data name="Distributor" xml:space="preserve">
-    <value>Издатель</value>
+    <value>Поставщик</value>
   </data>
   <data name="Genres" xml:space="preserve">
-    <value>Жанры</value>
+    <value>Категории</value>
   </data>
   <data name="Key" xml:space="preserve">
     <value>Ключ</value>

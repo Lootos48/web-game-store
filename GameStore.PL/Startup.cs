@@ -20,8 +20,6 @@ using System.Reflection;
 
 namespace GameStore.PL
 {
-    //TODO: обрабатывать ситуацию одновременной покупки Concurency buy, обрабатывать ситуацию одновременного перевода одной локализации несколькими переводчиками одновременно
-    //Синхронизация объекта к которому могут обратиться несколько потоков: Semaphor, Monitor, lock
     public class Startup
     {
         public IConfiguration Configuration { get; }

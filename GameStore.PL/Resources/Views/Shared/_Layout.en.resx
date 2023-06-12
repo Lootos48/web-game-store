@@ -126,15 +126,15 @@
     <comment>Basket page</comment>
   </data>
   <data name="Games" xml:space="preserve">
-    <value>Games</value>
+    <value>Products</value>
     <comment>Games page</comment>
   </data>
   <data name="GamesComponent" xml:space="preserve">
-    <value>Total number of games</value>
+    <value>Total number of products</value>
     <comment>Sign for total number of games component</comment>
   </data>
   <data name="Genres" xml:space="preserve">
-    <value>Genres</value>
+    <value>Categories</value>
     <comment>Genres list page</comment>
   </data>
   <data name="History" xml:space="preserve">
@@ -154,7 +154,7 @@
     <comment>Platforms list page</comment>
   </data>
   <data name="Publishers" xml:space="preserve">
-    <value>Publishers</value>
+    <value>Distributors</value>
     <comment>Publishers list page</comment>
   </data>
 </root>

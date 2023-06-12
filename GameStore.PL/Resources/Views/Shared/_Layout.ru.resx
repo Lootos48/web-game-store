@@ -126,15 +126,15 @@
     <comment>Страница корзины пользователя</comment>
   </data>
   <data name="Games" xml:space="preserve">
-    <value>Игры</value>
+    <value>Продукты</value>
     <comment>Страница со списком игр</comment>
   </data>
   <data name="GamesComponent" xml:space="preserve">
-    <value>Количество игр в магазине</value>
+    <value>Количество продуктов в магазине</value>
     <comment>Надпись для компонента общего количества игр в магазине</comment>
   </data>
   <data name="Genres" xml:space="preserve">
-    <value>Жанры</value>
+    <value>Категории</value>
     <comment>Страница со списком жанров</comment>
   </data>
   <data name="History" xml:space="preserve">
@@ -150,7 +150,7 @@
     <comment>Страница со списком заказов</comment>
   </data>
   <data name="Platforms" xml:space="preserve">
-    <value>Платформы</value>
+    <value>Поставщики</value>
     <comment>Страница со списком платформ</comment>
   </data>
   <data name="Publishers" xml:space="preserve">

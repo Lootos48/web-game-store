@@ -28,9 +28,14 @@
                 <input asp-for="OrderToEdit.Freight" class="form-control" />
                 <span asp-validation-for="OrderToEdit.Freight" class="text-danger"></span>
             </div>
-
+            
             <div class="form-group">
                 <label asp-for="OrderToEdit.ShipName" class="control-label"></label>
+                <input asp-for="OrderToEdit.ShipName" class="form-control" />
+                <span asp-validation-for="OrderToEdit.ShipName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
                 <label asp-for="OrderToEdit.ShipAddress" class="control-label"></label>
                 <input asp-for="OrderToEdit.ShipAddress" class="form-control" />
                 <span asp-validation-for="OrderToEdit.ShipAddress" class="text-danger"></span>
@@ -67,8 +72,8 @@
                 new { @class = "form-control", multiple = "false", @size = 3 })
             </div>
 
-            <div class="form-group row">
-                <input type="submit" value="@Localizer["Choose"]" class="btn btn-primary col-3 me-3" />
+            <div class="form-group row mt-4">
+                <input type="submit" value="@Localizer["Choose"]" class="btn btn-primary col-6 ms-4 me-3" />
                 <a asp-action="Index" class="btn btn-outline-dark col-3">@SharedLocalizer["BackToList"]</a>
             </div>
         </form>

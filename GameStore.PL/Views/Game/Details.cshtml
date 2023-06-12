@@ -1,4 +1,5 @@
 ﻿@model GameStore.PL.DTOs.GoodsDTO
+@using GameStore.DomainModels.Enums;
 @using GameStore.PL.App_Code
 @using GameStore.PL.Util.Localizers
 @using Microsoft.AspNetCore.Mvc.Localization
@@ -70,8 +71,11 @@
 </div>
 <div>
     <a asp-action="GetComments" asp-route-key="@Model.Key" class="m-1 btn btn-outline-dark">@Localizer["Comments"]</a>
-    <a asp-action="Download" asp-route-key="@Model.Key" class="m-1 btn btn-outline-dark" target="_blank">@Localizer["Download"]</a>
+    @*<a asp-action="Download" asp-route-key="@Model.Key" class="m-1 btn btn-outline-dark" target="_blank">@Localizer["Download"]</a>*@
     <a asp-action="Buy" asp-route-key="@Model.Key" class="m-1 btn btn-outline-success">@Localizer["Buy"]</a>
-    <a asp-controller="games" asp-action="GetEditingView" asp-route-key="@Model.Key" class="m-1 btn btn-outline-warning">@SharedLocalizer["Edit"]</a>
+    @if (Context.User.IsInRole(UserRoles.Publishers.ToString()) || Context.User.IsInRole(UserRoles.Manager.ToString()) || Context.User.IsInRole(UserRoles.Administrator.ToString()))
+    {
+        <a asp-controller="games" asp-action="GetEditingView" asp-route-key="@Model.Key" class="m-1 btn btn-outline-warning">@SharedLocalizer["Edit"]</a>
+    }
     <a asp-controller="games" asp-action="Index" class="m-1 btn btn-outline-dark">@SharedLocalizer["BackToList"]</a>
 </div>

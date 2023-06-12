@@ -124,13 +124,13 @@
     <value>Кошик</value>
   </data>
   <data name="Games" xml:space="preserve">
-    <value>Ігри</value>
+    <value>Продукти</value>
   </data>
   <data name="GamesComponent" xml:space="preserve">
-    <value>Кількість ігор у магазині</value>
+    <value>Кількість продуктів у магазині</value>
   </data>
   <data name="Genres" xml:space="preserve">
-    <value>Жанри</value>
+    <value>Категорії</value>
   </data>
   <data name="History" xml:space="preserve">
     <value>Історія замовлень</value>
@@ -145,6 +145,6 @@
     <value>Платформи</value>
   </data>
   <data name="Publishers" xml:space="preserve">
-    <value>Видавці</value>
+    <value>Постачальники</value>
   </data>
 </root>
